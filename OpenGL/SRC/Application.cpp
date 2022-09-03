@@ -137,12 +137,6 @@ int main(void)
                                0, 1, 2,
                                2, 3, 0
                              };
-    unsigned int buffer;
-    glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, 6 *2* sizeof(float), positions, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 
     unsigned int vao;
     glGenVertexArrays(1, &vao);
@@ -181,12 +175,6 @@ int main(void)
 
     float r = 0.0f, increment = 0.05f;
 
-    int location = glGetUniformLocation(shader, "u_Color");
-    //ASSERT(location != -1);
-   // glUniform4f(location, 0.8f, 0.3f, 0.8f, 1.0f);
-
-    float r = 0.0f, increment = 0.05f;
-
     
 
     /* Loop until the user closes the window */
@@ -195,8 +183,6 @@ int main(void)
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUniform4f(location, r, 0.3f, 0.8f, 1.0f);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
         //glUseProgram(shader);
         //glUniform4f(location, r, 0.3f, 0.8f, 1.0f);
 
@@ -206,13 +192,6 @@ int main(void)
         va.Bind();
         ib.Bind();
         GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-
-        if (r > 1.0f)
-            increment = -0.05f;
-        else if (r < 0.0f)
-            increment = 0.05f;
-
-        r += increment;
 
         if (r > 1.0f)
             increment = -0.05f;
