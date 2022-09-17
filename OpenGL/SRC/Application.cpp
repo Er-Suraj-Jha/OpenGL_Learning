@@ -101,7 +101,8 @@ int main(void)
     ImGui_ImplOpenGL3_Init();
 
     float r = 0.0f, increment = 0.05f;
-    glm::vec3 translation(0, 0, 0);
+    glm::vec3 translationA(0, 0, 0);
+    glm::vec3 translationB(1.0, 0, 0);
 
 
     /* Loop until the user closes the window */
@@ -114,14 +115,26 @@ int main(void)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), translation);
-        glm::mat4 mvp = proj * model;
 
-        shader.Bind();
-        shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
-        shader.SetUniformMat4f("u_MVP", mvp);
-        
-        renderer.Draw(va, ib, shader);
+        {
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), translationA);
+            glm::mat4 mvp = proj * model;
+            shader.Bind();
+            shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
+            shader.SetUniformMat4f("u_MVP", mvp);
+            renderer.Draw(va, ib, shader);
+            shader.Unbind();
+        }
+
+        {
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), translationB);
+            glm::mat4 mvp = proj * model;
+            shader.Bind();
+            shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
+            shader.SetUniformMat4f("u_MVP", mvp);
+            renderer.Draw(va, ib, shader);
+            shader.Unbind();
+        }
 
         static float f = 0.0f;
         static int counter = 0;
@@ -134,7 +147,8 @@ int main(void)
         r += increment;
 
         {
-            ImGui::SliderFloat3("Translation", &translation.x, 0.0f, 2.0f);
+            ImGui::SliderFloat3("Translation A", &translationA.x, 0.0f, 2.0f);
+            ImGui::SliderFloat3("Translation B", &translationB.x, 0.0f, 2.0f);
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         }
 
